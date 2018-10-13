@@ -5,6 +5,10 @@
 # Ada Library Information
 *.ali
 b~*
+b__*
+*.bexch
+*.stderr
+*.stdout
 
 # Editing residue
 *.*~
