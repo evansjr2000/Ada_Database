@@ -1,0 +1,13 @@
+-- Start of Trace, Mode = TRACE_FULL
+-- SQL QUERY:
+SELECT * FROM USER
+
+;
+
+-- ROLLBACK ON FINALIZE
+-- SQL QUERY:
+ROLLBACK
+
+;
+
+-- End of Trace.

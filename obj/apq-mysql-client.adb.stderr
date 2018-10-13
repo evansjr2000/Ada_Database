@@ -1,0 +1,5 @@
+apq-mysql-client.adb:637:07: warning: insufficient -O value
+apq-mysql-client.adb:651:07: warning: insufficient -O value
+apq-mysql-client.adb:678:07: warning: insufficient -O value
+apq-mysql-client.adb:793:10: warning: insufficient -O value
+apq-mysql-client.adb:912:07: warning: insufficient -O value

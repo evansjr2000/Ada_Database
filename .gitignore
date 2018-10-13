@@ -1,5 +1,13 @@
 # Object file
 *.o
+*.a
 
 # Ada Library Information
 *.ali
+b~*
+
+# Editing residue
+*.*~
+
+# atangle stuff
+web_output.a

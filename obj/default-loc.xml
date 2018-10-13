@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<Locations >
+  <Project >
+    <file_marker column=" 1" line=" 51" >
+      <vfs_project>/home/evansjr/notes/code/database/default.gpr</vfs_project>
+      <vfs_file>/home/evansjr/notes/code/database/src/add_user.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 17" line=" 39" >
+      <vfs_project>/home/evansjr/notes/code/database/default.gpr</vfs_project>
+      <vfs_file>/home/evansjr/notes/code/database/src/c_mysql.c</vfs_file>
+    </file_marker>
+    <file_marker column=" 6" line=" 2" >
+      <vfs_project>/home/evansjr/notes/code/database/default.gpr</vfs_project>
+      <vfs_file>/home/evansjr/notes/code/database/src/test-mysql.c</vfs_file>
+    </file_marker>
+    <file_marker column=" 25" line=" 251" >
+      <vfs_project>/home/evansjr/notes/code/database/default.gpr</vfs_project>
+      <vfs_file>/home/evansjr/notes/code/database/src/apq-mysql-client.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project>/home/evansjr/notes/code/database/default.gpr</vfs_project>
+      <vfs_file>/home/evansjr/notes/code/database/src/add_user.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 50" >
+      <vfs_project>/home/evansjr/notes/code/database/default.gpr</vfs_project>
+      <vfs_file>/home/evansjr/notes/code/database/src/add_user.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 1" >
+      <vfs_project />
+      <vfs_file>/opt/GNAT/2018/lib/gcc/x86_64-pc-linux-gnu/7.3.1/rts-native/adainclude/a-except.adb</vfs_file>
+    </file_marker>
+    <file_marker column=" 1" line=" 50" >
+      <vfs_project>/home/evansjr/notes/code/database/default.gpr</vfs_project>
+      <vfs_file>/home/evansjr/notes/code/database/src/add_user.adb</vfs_file>
+    </file_marker>
+    <file_marker current="true" column=" 1" line=" 1" >
+      <vfs_project />
+      <vfs_file>/opt/GNAT/2018/lib/gcc/x86_64-pc-linux-gnu/7.3.1/rts-native/adainclude/a-except.adb</vfs_file>
+    </file_marker>
+  </Project>
+</Locations>

@@ -1,0 +1,32 @@
+[GENERATED OBJECT FILE]
+b__test-mysql.o
+[PROJECT FILES]
+/home/evansjr/notes/code/database/default.gpr
+20181005173303
+[BOUND OBJECT FILES]
+/home/evansjr/notes/code/database/obj/apq_helper.o
+/home/evansjr/notes/code/database/obj/apq.o
+/home/evansjr/notes/code/database/obj/apq-mysql.o
+/home/evansjr/notes/code/database/obj/apq-mysql-client.o
+/home/evansjr/notes/code/database/obj/apq-samples.o
+/home/evansjr/notes/code/database/obj/add_user.o
+[GENERATED SOURCE FILES]
+b__test-mysql.ads
+b__test-mysql.adb
+b__test-mysql.ali
+[RESULTING OPTIONS]
+-L/home/evansjr/notes/code/database/obj/
+-L/home/evansjr/notes/code/database/obj/
+-L/opt/GNAT/2018/lib/gcc/x86_64-pc-linux-gnu/7.3.1/adalib/
+-static
+-static-libgcc
+-L/usr/lib64/mysql
+-lmysqlclient
+-lpthread
+-lz
+-lm
+-ldl
+-lssl
+-lcrypto
+/opt/GNAT/2018/lib/gcc/x86_64-pc-linux-gnu/7.3.1/adalib/libgnat.a
+-ldl

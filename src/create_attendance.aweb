@@ -1,0 +1,318 @@
+%
+\def\web{{\bf WEB}}
+\input epsf
+\input today
+ 
+% Here is TeX material that gets inserted after \input webmaca
+\def\hang{\hangindent 3em\indent\ignorespaces}
+\font\ninerm=cmr9
+\let\mc=\ninerm % medium caps for names like ADA
+\def\ADA{{\mc ADA}}
+\def\ab{$\.|\ldots\.|$} % ADA brackets (|...|)
+\def\v{\.{\char'174}} % vertical (|) in typewriter font
+\mathchardef\BA="3224 % double arrow
+\def\({} % kludge for alphabetizing certain module names
+ 
+\def\title{Create Attendance}
+\def\contentspagenumber{0} % should be odd
+\def\topofcontents{\null\vfill
+  \titlefalse % include headline on the contents page
+  \def\rheader{\mainfont Appendix A\hfil \contentspagenumber}
+  \centerline{\titlefont {\ttitlefont Create Attendance}}
+  \vskip 15pt
+  \centerline{{\ninerm[Ada '95---Version 1.0]}}
+  \centerline{\today}
+  \vfill}
+\pageno=\contentspagenumber \advance\pageno by 1
+This page intentionally left blank
+\vfill
+\break
+ 
+@* Introduction. Here is the Ada code for a program that accesses
+a mysql database and generates a comma separated value (csv) text file.
+
+	create\_attendance -p <passwd>  -u <userid>
+
+@ \web is a literate programming paradigm for  C, Pascal or Ada, and other
+languages.
+This style of programming is called ``Literate Programming.''  For Further
+information see the paper {\it Literate Programming}, by Donald Knuth in
+{\sl The Computer Journal}, Vol 27, No. 2, 1984; or the book 
+{\sl Weaving a Program: Literate Programming
+in \web\/} by Wayne Sewell, Van Nostrand Reinhold, 1989.  Another
+good source of  information is the Usenet group {\it
+comp.programming.literate}.  It has  information on
+new tools and Frequently Asked Questions (FAQs).
+
+@ The program consists of several packages that are declared right now;
+each of these packages and either the specification and the body of
+the packages are sent to a separate file. The main program itself
+is declared later. (Since the original AWEB package was written
+for Ada '83, it does not properly format new Ada '95 keywords
+|protected| and |private|.  We remedy using the web format commands
+below.
+@f protected == procedure
+@f private == procedure
+
+@ As a way of explanation, each ``Module'' withing
+angle brackets ($<\quad >$) is expanded somewhere further
+down in the document.  The trailing number you see within
+the brackets is where you can find this expansion.  It
+is top-down in appearance, and in actual fact.
+
+@  This is the main routine that starts everything. 
+
+(Note: The following format is used by
+all the packages.  We write the top-level code, in
+macro-level descriptions, 
+and it gets expanded into code further down.  This way you can
+write small, easily understood modules.  It also lets you declare and describe
+variables and types where you need them.)
+@a
+@~create_attendance.adb@>
+@.create_attendance.adb@>
+
+@< Needed packages @> @;
+
+procedure create_attendance is 
+
+    @< Types local to |create_attendance| @>  @;
+    @< Variables local to |create_attendance| @>  @;
+begin
+    @< Get input parameters @> @;
+    @< Open database @> @;
+    @< Create query @> @;
+    @< Output some header information @> @;
+    @< Loop through the values returned from the database @> @;
+    @< Output the attendance values @> @;
+end create_attendance;
+
+@ I use the very well documented APQ package for accessing the mysql database.
+@< Needed packages @>=
+with APQ;
+use APQ;
+with APQ.MySQL.client;
+use APQ.MySQL.client;
+with Ada.text_io;
+use Ada.text_io;
+
+@
+@< Types local to |create_attendance| @>=
+type event_date is new APQ_date;
+type student_id_type is new APQ_Integer;
+type student_record is record
+     last_name : ustring;
+     first_name : ustring;
+     id : student_id_type;
+     random_id : student_id_type;
+     status : ustring;
+     description : ustring;
+     edate : event_date;
+end record;
+
+@ Need a student list.
+@< Variables local to |create_attendance| @>=
+maxstudents : constant student_id_type := 100;
+maxdates : constant student_id_type := 30;
+maxrecords : constant student_id_type := (maxstudents * maxdates);
+
+@ To access the database we need a connection and a query variable.  Here
+I declare them.
+@< Variables local to |create_attendance| @>=
+C : Connection_Type;
+Q : Root_Query_Type'Class := APQ.MySQL.client.New_Query(C);
+
+@ The input values are read in using the routines in package |getopt|.
+@< Get input parameters @>=
+if option_present(U("-d")) then
+    get_option(U("-d"), param);
+    get(S(param),debug,Last);
+else
+   debug := false;
+end if;
+if option_present(U("-u")) then
+    get_option(U("-u"), uname);
+    if debug then
+        put("Your username is ");
+	put_line(uname);
+    end if;
+end if;
+if option_present(U("-p")) then
+    get_option(U("-p"), passwd);
+    if debug then
+	put("Your password is ");
+	put_line(passwd);
+    end if;
+end if;
+
+@
+@< Variables local to |create_attendance| @>=
+uname : ustring := U("evansjr");
+passwd : ustring := U("elephant");
+Last : positive;
+param : ustring;
+
+
+@ We need some more packages to read in the parameters.  Specifically
+the package |getopt| written by this student; and the package 
+|ustrings|---used for manipulating ``unbounded'' strings.
+@< Needed packages @>=
+with ustrings; use ustrings;
+with GetOpt; use GetOpt;
+
+@
+@< Open database @>=
+put_line("Choosing DB to use.");
+Set_DB_Name(C,"Class2013");
+put_line("Choosing password.");
+Set_User_Password(C,S(uname),S(passwd));
+put_line("Attempting to connect.");
+My_Connect(C);
+
+@ This is an sql query embedded in an Ada string, first tested
+by running it from within mysql.
+@< Create query @>=
+Prepare(Q,"SELECT class_2013.id, class_2013.last_name,");
+Append_Line(Q,"class_2013.first_name,random_id.rand_id, ");
+Append_Line(Q,"attendance.status, events.date");
+Append_Line(Q,"FROM class_2013, random_id, attendance, events");
+Append_Line(Q,"WHERE (class_2013.id = random_id.id) AND ");
+Append_Line(Q,"(class_2013.id = attendance.student_id)");
+Append_Line(Q,"AND (events.id = attendance.event_id)");
+Append_Line(Q,"ORDER BY class_2013.id, attendance.event_id;");
+Execute_Checked(Q,C);
+
+@
+@< Variables local to |create_attendance| @>=
+	    function value is new integer_value(student_id_type);
+	    function value is new date_value(event_date);
+            package stud_io  is new integer_io(student_id_type);
+	    use stud_io;
+	    package bool_io is new enumeration_io(boolean); 
+            use bool_io;
+	    old_id : student_id_type := 0;
+	    sr : array(1..maxrecords) of student_record;
+
+@ 
+@< Output some header information @>=
+if (debug) then
+      put_line("Attendance:");
+      new_line;
+      put_line("Id   Last Name     First Name     Status    Date");
+      put_line("--   ---------------------------------------- --------------------");
+end if;
+
+@
+@< Loop through the values returned from the database @>=
+      recno := 0;
+      loop
+         begin
+            Fetch(Q);
+         exception
+            when No_Tuple =>
+               exit;
+         end;
+	 recno := recno + 1;
+         sr(recno).id := value(Q,1);
+	 sr(recno).random_id := value(Q,4);
+	 if debug2 then
+	 put("Id read in is ");
+	 put(sr(recno).id);
+	 put(".  recno is ");
+	 put(recno);
+	 put_line(". ");
+	 end if;
+         declare
+             last_name :    string := value(Q,2);
+             first_name :   string := value(Q,3);
+	  begin
+	      sr(recno).last_name := U(last_name);
+	      sr(recno).first_name := U(first_name);
+	  end;
+	  declare
+	     yr_status : string := value(Q,5);
+	  begin
+	     sr(recno).status := U(yr_status);
+	  end;
+         sr(recno).description := U("nothing");
+         sr(recno).edate := value(Q,6);
+      end loop;
+      total_records := recno;
+
+@
+@< Variables local to |create_attendance| @>=
+debug : boolean := false;
+debug2 : boolean := false;
+recno : student_id_type := 0;
+total_records : student_id_type :=0;
+
+@
+@< Output the attendance values @>=
+if debug then
+    put_line("The size of the main list is ");
+    put(total_records);
+    put_line(" ");
+end if;
+current_id := 0;
+for i in 1..total_records loop
+    new_id := sr(i).id;
+    if (new_id /= current_id) then
+        current_id := new_id;
+        @< Do beginning of line @> @;
+    end if;
+    @< Put status @> @;
+end loop;
+
+@
+@< Do beginning of line @>=
+put_line(" ");
+if (debug) then
+  put(new_id);
+  put(", ");
+end if;
+put(sr(i).last_name);
+put("; ");
+put(sr(i).first_name);
+
+
+@
+@< Put status @>=
+put(", ");
+if (S(sr(i).status) = "present") then
+   put("\P");
+elsif (S(sr(i).status) = "absent") then
+   put("\A");
+elsif (S(sr(i).status) = "excused") then
+   put("\E");
+elsif (S(sr(i).status) = "blank") then
+   put(" ");
+else
+   put("?");
+end if;
+
+@
+@< Variables local to |create_attendance| @>=
+current_id, new_id : student_id_type;
+
+@* System-dependent changes.
+This module should be replaced, if necessary, by changes to the program
+that are necessary to make \.{MAIN} work at a particular installation.
+It is usually best to design your change file so that all changes to
+previous modules preserve the module numbering; then everybody's version
+will be consistent with the printed program. More extensive changes,
+which introduce new modules, can be inserted here; then only the index
+itself will get a new module number.
+@^system dependencies@>
+ 
+@* Index.
+Here is a cross-reference table for the \.{MAIN} program.
+All modules in which an identifier is
+used are listed with that identifier, except that reserved words are
+indexed only when they appear in format definitions, and the appearances
+of identifiers in module names are not indexed.
+Underlined entries of subprograms and packages correspond to sections where
+this entity is specified, whereas entries in italic type correspond to
+the section where the entity's body is stated.
+For any other identifier underlined entries correspond to where the
+identifier was declared. Error messages and
+a few other things like ``ASCII code'' are indexed here too.
