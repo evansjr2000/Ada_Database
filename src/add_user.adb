@@ -33,38 +33,38 @@
 
 with Ada.Calendar;
 
-with APQ;			use APQ;
-with APQ.MySQL.Client;		use APQ.MySQL.Client;
-with APQ.Samples;		use APQ.Samples;
+with APQ;                       use APQ;
+with APQ.MySQL.Client;          use APQ.MySQL.Client;
+with APQ.Samples;               use APQ.Samples;
 with Ada.Text_IO;                   use Ada.Text_IO;
 
 procedure add_user is
-	C: Connection_Type;
+        C: Connection_Type;
 begin
-	Set_Host_Name( C, "localhost" );
-	Set_User_Password( C, "root", "go.navy" );
+        Set_Host_Name( C, "localhost" );
+        Set_User_Password( C, "root", "go.navy" );
 
-	Set_DB_Name( C, "apq_test" );
+        Set_DB_Name( C, "apq_test" );
 
-	Set_Case( C, Upper_Case );
+        Set_Case( C, Upper_Case );
 
-	Put_Line("Calling My_Connect().");
-	My_Connect( C );
+        Put_Line("Calling My_Connect().");
+        My_Connect( C );
 
---	Put_Line("Open_DB_Trace().");
---	Open_DB_Trace( C, "trace.log", Trace_Full );
+--      Put_Line("Open_DB_Trace().");
+--      Open_DB_Trace( C, "trace.log", Trace_Full );
 
 
-	Put_Line("Calling Insert_Value().");
-	Insert_Value( C, "'John Doe2'", Ada.Calendar.Clock );
-	Put_Line("Calling Insert_Value().");
-	Insert_Value( C, "'Mary Jane'", Ada.Calendar.Clock );
-	Put_Line("Calling Insert_Value().");
-	Insert_Value( C, "'Donald Trump'", Ada.Calendar.Clock );
-	
-	Put_Line("Calling Disconnect().");
-	Disconnect(C);
-	
-	Put_Line("End of Procedure add_user().");
-	
+        Put_Line("Calling Insert_Value().");
+        Insert_Value( C, "'John Doe2'", Ada.Calendar.Clock );
+        Put_Line("Calling Insert_Value().");
+        Insert_Value( C, "'Mary Jane'", Ada.Calendar.Clock );
+        Put_Line("Calling Insert_Value().");
+        Insert_Value( C, "'Donald Trump'", Ada.Calendar.Clock );
+
+        Put_Line("Calling Disconnect().");
+        Disconnect(C);
+
+        Put_Line("End of Procedure add_user().");
+
 end add_user;
